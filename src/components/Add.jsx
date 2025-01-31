@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useState } from 'react';
 import { addVideoApi } from '../Services/allApi';
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 
 function Add() {
 
@@ -26,16 +28,57 @@ function Add() {
         })
     }
 
-    const handleAdd = async() => {
+    const handleAdd = async () => {
         const { caption, ImgUrl, embededLink } = videoDetails // destructure
         if (!caption || !ImgUrl || !embededLink) {
-            alert(`Fill the form Completely`)
+            // alert(`Fill the form Completely`)
+            toast.info(`Fill the form Completely`)
         } else {
             // alert(`Proceed`)
             // axios( ) will create seperate config
-            const result = await addVideoApi(videoDetails)
-            console.log(result);
-            
+            // const result = await addVideoApi(videoDetails)
+            // console.log(result);
+
+            // https://youtu.be/tGCnglJGElk?si=lMbHIVhR7Rv9VjIO
+            if (embededLink.startsWith('https://youtu.be/')) {
+                let link = `https://www.youtube.com/embed/${embededLink.slice(17, 28)}`
+                console.log(link);
+
+                const result = await addVideoApi({ caption, ImgUrl, embededLink: link })
+                console.log(result);
+                if (result.status >= 200 && result.status < 300) {
+                    // alert(`Video Added Successfully`)
+                    toast.success(`Video Added Successfully`)
+                    handleClose()
+                } else {
+                    // alert(`Something Went Wrong`)
+                    toast.error(`Something Went Wrong`)
+                    handleCancel()
+                }
+
+
+
+            } else {
+                // https://www.youtube.com/watch?v=tGCnglJGElk
+                let link = `https://www.youtube.com/embed/${embededLink.slice(-11)}`
+                console.log(link);
+
+                const result = await addVideoApi({ caption, ImgUrl, embededLink: link })
+                console.log(result);
+                if (result.status >= 200 && result.status < 300) {
+                    // alert(`Video Added Successfully`)
+                    toast.success(`Video Added Successfully`)
+                    handleClose()
+                } else {
+                    // alert(`Something Went Wrong`)
+                    toast.error(`Something Went Wrong`)
+                    handleCancel()
+                }
+
+            }
+
+            // https://www.youtube.com/watch?v=tGCnglJGElk
+            // https://youtu.be/tGCnglJGElk?si=lMbHIVhR7Rv9VjIO
         }
     }
 
@@ -72,6 +115,8 @@ function Add() {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <ToastContainer 
+            position='top-center' theme="colored" autoClose={2000} />
         </>
     )
 }
