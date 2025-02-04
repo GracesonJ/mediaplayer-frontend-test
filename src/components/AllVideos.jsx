@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import VideoCard from './VideoCard'
 import { getVideoApi } from '../Services/allApi'
 
-function AllVideos() {
+function AllVideos({addStatus}) {
     const [video, setVideo] = useState([])
+    const [deleteStatus, setDeleteStatus] = useState({})
 
     const getAllVideo = async () => {
         const result = await getVideoApi()
@@ -15,7 +16,8 @@ function AllVideos() {
 
     useEffect(() => {
         getAllVideo()
-    }, [])
+    }, [addStatus,deleteStatus])
+
     return (
         <>
             <h2 className='mt-5'>All Videos</h2>
@@ -25,11 +27,11 @@ function AllVideos() {
                     <div className="row">
                         {video?.map((item) => (
                             <div className="col-md-3" >
-                                <VideoCard videoDetails = {item} />
+                                <VideoCard videoDetails = {item} setDeleteStatus={setDeleteStatus} />
                             </div>
                         ))
                         }
-                        <div className="col-md-3"> <VideoCard /></div>
+                        
                     </div>
                 </div >
                 :

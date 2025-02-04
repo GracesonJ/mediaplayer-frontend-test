@@ -8,7 +8,7 @@ import { addVideoApi } from '../Services/allApi';
 import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 
-function Add() {
+function Add({setAddStatus}) {
 
     const [show, setShow] = useState(false);
 
@@ -50,6 +50,7 @@ function Add() {
                     // alert(`Video Added Successfully`)
                     toast.success(`Video Added Successfully`)
                     handleClose()
+                    setAddStatus(result)
                 } else {
                     // alert(`Something Went Wrong`)
                     toast.error(`Something Went Wrong`)
@@ -69,6 +70,7 @@ function Add() {
                     // alert(`Video Added Successfully`)
                     toast.success(`Video Added Successfully`)
                     handleClose()
+                    setAddStatus(result) 
                 } else {
                     // alert(`Something Went Wrong`)
                     toast.error(`Something Went Wrong`)
