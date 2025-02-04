@@ -25,10 +25,10 @@ function AllVideos() {
                     <div className="row">
                         {video?.map((item) => (
                             <div className="col-md-3" >
-                                <VideoCard />
+                                <VideoCard videoDetails = {item} />
                             </div>
                         ))
-                            }
+                        }
                         <div className="col-md-3"> <VideoCard /></div>
                     </div>
                 </div >
