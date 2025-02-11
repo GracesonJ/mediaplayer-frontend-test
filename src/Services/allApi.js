@@ -32,3 +32,18 @@ export const getHistoryApi = async ()=>{
 export const removeHistoryVideoApi  = async(id)=>{
     return await commonApi(`DELETE`,`${serverUrl}/history/${id}`,{})
 }
+
+// api to add category
+export const addCategoryApi = async (reqBody)=>{
+    return await commonApi("POST", `${serverUrl}/category`, reqBody)
+}
+
+// api to get category
+export const getAllCategoryApi = async ()=>{
+    return await commonApi(`GET`,`${serverUrl}/category`)
+}
+
+//api to delete category
+export const deleteCategoryApi = async (id)=>{
+    return await commonApi(`DELETE`, `${serverUrl}/category/${id}`,{})
+}
