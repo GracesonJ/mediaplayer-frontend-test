@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import VideoCard from './VideoCard';
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { addCategoryApi, deleteCategoryApi, getAllCategoryApi } from '../Services/allApi';
+import { addCategoryApi, deleteCategoryApi, getAllCategoryApi, updateCategoryApi } from '../Services/allApi';
 
 function Categories() {
 
@@ -14,6 +14,7 @@ function Categories() {
   const [allCategory, setAllCategory] = useState([])
   const [categoryStatus, setCategoryStatus] = useState({})
   const [deleteStatus, setDeleteStatus] = useState([])
+  const [categoryUpdateStatus, setCategoryUpdateStatus] = useState({})
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -57,22 +58,49 @@ function Categories() {
 
   console.log(allCategory);
 
-  const deleteCategory = async (id)=>{
+  const deleteCategory = async (id) => {
     const result = await deleteCategoryApi(id)
     console.log(result);
-    if(result.status >=200 && result.status<300){
+    if (result.status >= 200 && result.status < 300) {
       setDeleteStatus(result)
-    }else{
+    } else {
       alert(`Something Went Wrong`)
     }
-    
-    
+
+
   }
 
 
   useEffect(() => {
     getCategory()
-  }, [categoryStatus, deleteStatus])
+  },
+    [categoryStatus, deleteStatus, categoryUpdateStatus]
+  )
+
+  const videoOver = (e) => {
+    e.preventDefault()
+  }
+
+  const videoDrop = async (e, categoryDetails) => {
+    console.log(categoryDetails);
+    const videoDetails = JSON.parse(e.dataTransfer.getData("videoDetails"))
+    console.log(videoDetails);
+
+    if (categoryDetails.allVideos.find((item) => item.id == videoDetails.id)) {
+      alert(`Video Already in the Same Category`)
+    } else {
+      categoryDetails.allVideos.push(videoDetails)
+      console.log(categoryDetails);
+
+      const result = await updateCategoryApi(categoryDetails.id, categoryDetails)
+      console.log(result);
+      if (result.status >= 200 && result.status < 300){
+        setCategoryUpdateStatus(result)
+      }
+
+    }
+
+  }
 
 
   return (
@@ -82,13 +110,18 @@ function Categories() {
 
       {allCategory?.length > 0 ?
         allCategory?.map((item) => (
-          <div className="border border-secondary p-3 mt-3">
+          <div className="border border-secondary p-3 mt-3" droppable onDragOver={(e) => videoOver(e)} onDrop={(e) => videoDrop(e, item)}>
             <div className="d-flex justify-content-between align-items-center p-3 rounded mt-4">
               <h5>{item?.category}</h5>
-              <Button onClick={()=>deleteCategory(item?.id)} variant="danger"><FontAwesomeIcon icon={faTrash} style={{ color: "white" }} /></Button>
+              <Button onClick={() => deleteCategory(item?.id)} variant="danger"><FontAwesomeIcon icon={faTrash} style={{ color: "white" }} /></Button>
             </div>
-            {/* <VideoCard/> */}
-          </div>
+            {item?.allVideos.length > 0 &&
+              item?.allVideos.map((video) => (
+                <VideoCard videoDetails = {video} present={true}/>
+              ))
+
+            }
+          </div> 
         ))
 
         :

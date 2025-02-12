@@ -47,3 +47,8 @@ export const getAllCategoryApi = async ()=>{
 export const deleteCategoryApi = async (id)=>{
     return await commonApi(`DELETE`, `${serverUrl}/category/${id}`,{})
 }
+
+// api to update category
+export const updateCategoryApi = async(categoryId, reqBody)=>{
+    return await  commonApi("PUT", `${serverUrl}/category/${categoryId}`, reqBody)
+}
