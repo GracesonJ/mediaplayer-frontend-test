@@ -8,6 +8,7 @@ import { faClockRotateLeft } from '@fortawesome/free-solid-svg-icons'
 
 function Home() {
   const [addStatus, setAddStatus] = useState({})
+  const [updateCategoryStatus, setUpdateCategoryStatus] = useState([])
   return (
     <>
         <div className="container d-flex justify-content-between mt-5">
@@ -18,10 +19,10 @@ function Home() {
         <div className="container-fluid p-4">
           <div className="row">
             <div className="col-md-9">
-              <AllVideos addStatus={addStatus} />
+              <AllVideos addStatus={addStatus} setUpdateCategoryStatus={setUpdateCategoryStatus}/>
             </div>
             <div className="col-md-3">
-              <Categories/>
+              <Categories updateCategoryStatus={updateCategoryStatus}/>
             </div>
           </div>
         </div> 

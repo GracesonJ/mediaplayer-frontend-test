@@ -7,7 +7,7 @@ import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { addCategoryApi, deleteCategoryApi, getAllCategoryApi, updateCategoryApi } from '../Services/allApi';
 
-function Categories() {
+function Categories({updateCategoryStatus}) {
 
   const [show, setShow] = useState(false);
   const [categoryName, setCategoryName] = useState("")
@@ -38,6 +38,7 @@ function Categories() {
 
       if (result.status >= 200 && result.status < 300) {
         alert(`Category added successfully`)
+        setCategoryStatus(result)
         handleClose()
         handleCancel()
       } else {
@@ -52,7 +53,7 @@ function Categories() {
     console.log(result);
     if (result.status >= 200 && result.status < 300) {
       setAllCategory(result.data)
-      setCategoryStatus(result)
+
     }
   }
 
@@ -74,7 +75,7 @@ function Categories() {
   useEffect(() => {
     getCategory()
   },
-    [categoryStatus, deleteStatus, categoryUpdateStatus]
+    [categoryStatus, deleteStatus, categoryUpdateStatus, updateCategoryStatus]
   )
 
   const videoOver = (e) => {
@@ -94,11 +95,24 @@ function Categories() {
 
       const result = await updateCategoryApi(categoryDetails.id, categoryDetails)
       console.log(result);
-      if (result.status >= 200 && result.status < 300){
+      if (result.status >= 200 && result.status < 300) {
         setCategoryUpdateStatus(result)
       }
 
     }
+
+  }
+
+  const videoDrag = (e, videoDetails, categoryDetails) => {
+    console.log(videoDetails);
+    console.log(categoryDetails);
+
+    const details = {
+      videoDetails,
+      categoryDetails
+    }
+    e.dataTransfer.setData("Details", JSON.stringify(details))
+
 
   }
 
@@ -115,13 +129,15 @@ function Categories() {
               <h5>{item?.category}</h5>
               <Button onClick={() => deleteCategory(item?.id)} variant="danger"><FontAwesomeIcon icon={faTrash} style={{ color: "white" }} /></Button>
             </div>
-            {item?.allVideos.length > 0 &&
+            {item?.allVideos.length> 0 &&
               item?.allVideos.map((video) => (
-                <VideoCard videoDetails = {video} present={true}/>
+                <div draggable onDragStart={(e) => videoDrag(e, video, item)}>
+                  <VideoCard videoDetails={video} present={true} />
+                </div>
               ))
 
             }
-          </div> 
+          </div>
         ))
 
         :
